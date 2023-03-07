@@ -6,6 +6,14 @@
     {
       "name": "uaa.user",
       "description": "UAA"
+    },
+    {
+      "name": "$XSAPPNAME.POViewer",
+      "description": "PO Viewer"
+    },
+    {
+      "name": "$XSAPPNAME.POManager",
+      "description": "PO Manager"
     }
   ],
   "role-templates": [
@@ -15,6 +23,22 @@
       "scope-references": [
         "uaa.user"
       ]
+    },
+    {
+      "name": "POViewer",
+      "description": "PO Viewer",
+      "scope-references": [
+        "$XSAPPNAME.POViewer"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "POManager",
+      "description": "PO Manager",
+      "scope-references": [
+        "$XSAPPNAME.POManager"
+      ],
+      "attribute-references": []
     }
   ],
   "attributes": []
