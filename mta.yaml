@@ -8,6 +8,7 @@ modules:
   path: gen/srv
   requires:
   - name: processordersapp-db
+  - name: uaa_processordersapp
   provides:
   - name: srv-api
     properties:
@@ -37,9 +38,10 @@ modules:
     parameters:
       service-key:
         name: uaa_processordersapp-key
+  - name: srv-api
   parameters:
     content:
-      instance:
+      subaccount:
         destinations:
         - Name: poapp_processordersapp_html_repo_host
           ServiceInstanceName: processordersapp-html5-app-host-service
@@ -49,10 +51,35 @@ modules:
           Name: poapp_uaa_processordersapp
           ServiceInstanceName: processordersapp-xsuaa-service
           ServiceKeyName: uaa_processordersapp-key
+          URL: '~{srv-api/srv-url}'
           sap.cloud.service: poapp
-        existing_destinations_policy: ignore
+        existing_destinations_policy: update
   build-parameters:
     no-source: true
+- name: processordersapp-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: processordersapp_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - comdemopomtaui.zip
+      name: comdemopomtaui
+      target-path: resources/
+- name: comdemopomtaui
+  type: html5
+  path: app/pomtaui
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
 resources:
 - name: processordersapp-db
   type: com.sap.xs.hdi-container
@@ -64,6 +91,15 @@ resources:
   parameters:
     config:
       HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
       version: 1.0.0
     service: destination
     service-name: processordersapp-destination-service
@@ -77,11 +113,15 @@ resources:
 - name: uaa_processordersapp
   type: org.cloudfoundry.managed-service
   parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: processordersapp-${org}-${space}
     path: ./xs-security.json
     service: xsuaa
     service-name: processordersapp-xsuaa-service
     service-plan: application
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
