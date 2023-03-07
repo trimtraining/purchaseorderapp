@@ -1,0 +1,7 @@
+ID;MaterialCode;MaterialDesc;Quantity;Price;purchaseOrders_RequestId
+a1000fec-e391-4e38-94b4-a4ff6f6331b5;M001;lights;10;100;PR0001
+2c283780-e852-4d81-a269-7c6407e13e51;M002;wire;20;100;PR0001
+c2b98c97-2b27-4a41-8f9d-c1df70a7703f;M001;lights;10;100;PR0002
+ee448750-cf2a-4132-bd3a-6d82c9a422ba;M002;wire;20;100;PR0002
+b8f4c571-5507-4d94-bc69-7b0fa5985db9;M001;lights;10;100;PR0003
+c93793d7-42a0-4dfa-bb20-9d0ac8dea407;M002;wire;20;100;PR0003

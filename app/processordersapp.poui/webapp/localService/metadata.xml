@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="processordersappService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="PurchaseOrders" EntityType="processordersappService.PurchaseOrders">
+                    <NavigationPropertyBinding Path="items" Target="Items"/>
+                </EntitySet>
+                <EntitySet Name="Items" EntityType="processordersappService.Items">
+                    <NavigationPropertyBinding Path="purchaseOrders" Target="PurchaseOrders"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="PurchaseOrders">
+                <Key>
+                    <PropertyRef Name="RequestId"/>
+                </Key>
+                <Property Name="RequestId" Type="Edm.String" Nullable="false"/>
+                <Property Name="VendorCode" Type="Edm.String" MaxLength="100"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="100"/>
+                <Property Name="PurchaseGroup" Type="Edm.String" MaxLength="100"/>
+                <Property Name="PurchaseOrg" Type="Edm.String" MaxLength="100"/>
+                <Property Name="Status" Type="Edm.String" MaxLength="100"/>
+                <NavigationProperty Name="items" Type="Collection(processordersappService.Items)" Partner="purchaseOrders"/>
+            </EntityType>
+            <EntityType Name="Items">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="MaterialCode" Type="Edm.String" MaxLength="100"/>
+                <Property Name="MaterialDesc" Type="Edm.String" MaxLength="100"/>
+                <Property Name="Quantity" Type="Edm.Int32"/>
+                <Property Name="Price" Type="Edm.Decimal" Scale="2" Precision="5"/>
+                <NavigationProperty Name="purchaseOrders" Type="processordersappService.PurchaseOrders" Partner="items">
+                    <ReferentialConstraint Property="purchaseOrders_RequestId" ReferencedProperty="RequestId"/>
+                </NavigationProperty>
+                <Property Name="purchaseOrders_RequestId" Type="Edm.String"/>
+            </EntityType>
+            <Annotations Target="processordersappService.Items/ID">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

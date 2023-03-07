@@ -1,0 +1,4 @@
+RequestId;VendorCode;CompanyCode;PurchaseGroup;PurchaseOrg;Status
+PR0001;V001;100;P001;500;Open
+PR0002;V002;200;P002;600;Open
+PR0003;V003;300;P003;700;Open

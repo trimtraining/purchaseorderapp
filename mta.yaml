@@ -1,0 +1,90 @@
+_schema-version: "3.1"
+ID: processordersapp
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: processordersapp-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: processordersapp-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm-ci
+- name: processordersapp-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: processordersapp-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: processordersapp-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: processordersapp-destination-service
+    parameters:
+      content-target: true
+  - name: processordersapp_html_repo_host
+    parameters:
+      service-key:
+        name: processordersapp_html_repo_host-key
+  - name: uaa_processordersapp
+    parameters:
+      service-key:
+        name: uaa_processordersapp-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: poapp_processordersapp_html_repo_host
+          ServiceInstanceName: processordersapp-html5-app-host-service
+          ServiceKeyName: processordersapp_html_repo_host-key
+          sap.cloud.service: poapp
+        - Authentication: OAuth2UserTokenExchange
+          Name: poapp_uaa_processordersapp
+          ServiceInstanceName: processordersapp-xsuaa-service
+          ServiceKeyName: uaa_processordersapp-key
+          sap.cloud.service: poapp
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+resources:
+- name: processordersapp-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: processordersapp-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      version: 1.0.0
+    service: destination
+    service-name: processordersapp-destination-service
+    service-plan: lite
+- name: processordersapp_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: processordersapp-html5-app-host-service
+    service-plan: app-host
+- name: uaa_processordersapp
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: processordersapp-xsuaa-service
+    service-plan: application
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npx -p @sap/cds-dk cds build --production

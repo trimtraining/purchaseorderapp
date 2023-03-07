@@ -1,0 +1,175 @@
+{
+    "_version": "1.49.0",
+    "sap.app": {
+        "id": "com.demo.pomtaui",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:lrop",
+            "version": "1.9.1",
+            "toolsId": "262d70a7-7dd5-48a8-8c6d-c18280ffa7b3"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/processordersapp/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "4.0"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "com-demo-pomtaui-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "po",
+                    "action": "orders",
+                    "title": "{{flpTitle}}",
+                    "subTitle": "{{flpSubtitle}}",
+                    "icon": ""
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.111.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ushell": {},
+                "sap.fe.templates": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.demo.pomtaui.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "css": []
+        },
+        "routing": {
+            "config": {},
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "PurchaseOrdersList",
+                    "target": "PurchaseOrdersList"
+                },
+                {
+                    "pattern": "PurchaseOrders({key}):?query:",
+                    "name": "PurchaseOrdersObjectPage",
+                    "target": "PurchaseOrdersObjectPage"
+                },
+                {
+                    "pattern": "PurchaseOrders({key})/items({key2}):?query:",
+                    "name": "ItemsObjectPage",
+                    "target": "ItemsObjectPage"
+                }
+            ],
+            "targets": {
+                "PurchaseOrdersList": {
+                    "type": "Component",
+                    "id": "PurchaseOrdersList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "entitySet": "PurchaseOrders",
+                            "variantManagement": "Page",
+                            "navigation": {
+                                "PurchaseOrders": {
+                                    "detail": {
+                                        "route": "PurchaseOrdersObjectPage"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "PurchaseOrdersObjectPage": {
+                    "type": "Component",
+                    "id": "PurchaseOrdersObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "entitySet": "PurchaseOrders",
+                            "navigation": {
+                                "items": {
+                                    "detail": {
+                                        "route": "ItemsObjectPage"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "ItemsObjectPage": {
+                    "type": "Component",
+                    "id": "ItemsObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "entitySet": "Items"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}

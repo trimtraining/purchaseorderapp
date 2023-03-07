@@ -1,0 +1,187 @@
+{
+    "_version": "1.44.0",
+    "sap.app": {
+        "id": "processordersapp.poui",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:lrop",
+            "version": "1.9.1",
+            "toolsId": "c17c0c3b-27ed-4b12-8e5a-59e34abc9036"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/processordersapp/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "4.0"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "processordersapp-poui-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "processordersapppoui",
+                    "action": "display",
+                    "title": "{{flpTitle}}",
+                    "subTitle": "{{flpSubtitle}}",
+                    "icon": ""
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.104.2",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ushell": {},
+                "sap.fe.templates": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "processordersapp.poui.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "css": []
+        },
+        "routing": {
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "PurchaseOrdersList",
+                    "target": "PurchaseOrdersList"
+                },
+                {
+                    "pattern": "PurchaseOrders({key}):?query:",
+                    "name": "PurchaseOrdersObjectPage",
+                    "target": "PurchaseOrdersObjectPage"
+                },
+                {
+                    "pattern": "PurchaseOrders({key})/items({key2}):?query:",
+                    "name": "ItemsObjectPage",
+                    "target": "ItemsObjectPage"
+                }
+            ],
+            "targets": {
+                "PurchaseOrdersList": {
+                    "type": "Component",
+                    "id": "PurchaseOrdersList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "entitySet": "PurchaseOrders",
+                            "variantManagement": "Page",
+                            "navigation": {
+                                "PurchaseOrders": {
+                                    "detail": {
+                                        "route": "PurchaseOrdersObjectPage"
+                                    }
+                                }
+                            },
+                            "initialLoad": "Enabled"
+                        }
+                    }
+                },
+                "PurchaseOrdersObjectPage": {
+                    "type": "Component",
+                    "id": "PurchaseOrdersObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "entitySet": "PurchaseOrders",
+                            "navigation": {
+                                "items": {
+                                    "detail": {
+                                        "route": "ItemsObjectPage"
+                                    }
+                                }
+                            },
+                            "controlConfiguration": {
+                                "items/@com.sap.vocabularies.UI.v1.LineItem#LineItems": {
+                                    "tableSettings": {
+                                        "selectionMode": "None"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "ItemsObjectPage": {
+                    "type": "Component",
+                    "id": "ItemsObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "entitySet": "Items"
+                        }
+                    }
+                }
+            }
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {}
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}
